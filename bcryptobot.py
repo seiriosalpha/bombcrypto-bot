@@ -4,7 +4,7 @@ import os
 import numpy as np
 import mss
 import time
-
+import sys
 ## TODO: server overload detection, newmap log, refresh heroes
 
 threshold_connect_wallet = 0.6
