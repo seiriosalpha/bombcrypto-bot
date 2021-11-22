@@ -5,7 +5,7 @@ import numpy as np
 import mss
 import time
 import sys
-## TODO: server overload detection, newmap log, refresh heroes
+## TODO: cleanup, transfer button checking from functions to click_btn
 
 threshold_connect_wallet = 0.6
 threshold_metamask_select = 0.6
@@ -17,11 +17,12 @@ threshold_hero_icon = 0.3
 threshold_work = 0.7
 threshold_treasure = 0.4
 
-hero_work_interval = 30
+hero_work_interval = 60
+hero_refresh_interval = 30
 
 login_attempts = 0
 
-pyautogui.FAILSAFE = True
+pyautogui.FAILSAFE = False
 
 ## Login image block
 connect_wallet_img = cv2.imread('imgs/connect_wallet.png')
@@ -127,9 +128,10 @@ def login():
             time.sleep(8)
         login()
 
-def handle_error():
+def handle_error(refresh):
     click_btn(get_coord(error_ok_img, threshold_connect_wallet)) 
-    pyautogui.hotkey('ctrl', 'f5')
+    if refresh:
+        pyautogui.hotkey('ctrl', 'f5')
     time.sleep(8)
     login()
 
@@ -172,11 +174,36 @@ def heroes_work():
             pyautogui.moveTo(x-10+w/2,y+h/2,1)
             pyautogui.click()
             ## Check overload
+            time.sleep(2)
+            error_coord = get_coord(error_img, threshold_error)
+
+            if error_coord is not False:
+                sys.stdout.write("\nError detected. Trying to resolve.")
+                handle_error(refresh=False)
+            
             work_button_list = get_coord(work_rest, threshold_work)
             time.sleep(4)
+        
         click_btn(get_coord(character_close_button, threshold_back))
         sys.stdout.write("\nFinished putting to work.")
     
+def refresh_heroes():
+    if current_screen() == "thunt":
+        back_coord = get_coord(back_button_img, threshold_back)
+        if back_coord is not False:
+            click_btn(back_coord)
+            time.sleep(2)
+        else:
+            time.sleep(5)
+            refresh_heroes
+    if current_screen() == "main":
+        treasure_coords = get_coord(treasure_hunt_img, threshold_treasure)
+        if treasure_coords is not False:
+            click_btn(treasure_coords)
+            time.sleep(2)
+        else:
+            time.sleep(5)
+            refresh_heroes
 
 def main():
     last = {
@@ -196,7 +223,7 @@ def main():
         error_coord = get_coord(error_img, threshold_error)
         if error_coord is not False:
             sys.stdout.write("\nError detected. Trying to resolve.")
-            handle_error()
+            handle_error(refresh=True)
 
 
         now = time.time()
@@ -214,6 +241,13 @@ def main():
             newmap_coord = get_coord(new_map, threshold_connect_wallet)
             if newmap_coord is not False:
                 click_btn(newmap_coord)
+                last["new_map"] = now
+        
+        now = time.time()
+        if now - last["refresh_heroes"] > hero_refresh_interval * 60:
+            refresh_heroes()
+            last["refresh_heroes"] = now
+            time.sleep(3)
 
         time.sleep(60)
 
