@@ -39,7 +39,7 @@ pip install -r requirements.txt
 ### It is finished! Now to run the bot you just need to type:
 
 ```
-python index.py
+python bcryptobot.py
 ```
 
 ![run](https://github.com/mpcabete/bombcrypto-bot/raw/main/readme-images/run.png)
