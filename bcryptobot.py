@@ -5,6 +5,7 @@ import numpy as np
 import mss
 import time
 import sys
+
 ## TODO: cleanup, transfer button checking from functions to click_btn
 
 threshold_connect_wallet = 0.6
@@ -17,11 +18,13 @@ threshold_hero_icon = 0.3
 threshold_work = 0.7
 threshold_treasure = 0.4
 
+general_check_time = 60
 hero_work_interval = 60
 hero_refresh_interval = 30
 
-login_attempts = 0
 
+
+login_attempts = 0
 pyautogui.FAILSAFE = False
 
 ## Login image block
@@ -240,16 +243,18 @@ def main():
         if screen == "thunt":
             newmap_coord = get_coord(new_map, threshold_connect_wallet)
             if newmap_coord is not False:
+                sys.stdout.write("\nNew map!")
                 click_btn(newmap_coord)
                 last["new_map"] = now
         
         now = time.time()
         if now - last["refresh_heroes"] > hero_refresh_interval * 60:
+            sys.stdout.write("\nRefreshing heroes.")
             refresh_heroes()
             last["refresh_heroes"] = now
             time.sleep(3)
 
-        time.sleep(60)
+        time.sleep(general_check_time)
 
 
 main()
