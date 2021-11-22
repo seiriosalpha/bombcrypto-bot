@@ -85,12 +85,14 @@ def login():
     connect_wallet_coord = get_coord(connect_wallet_img, threshold_connect_wallet)
     if connect_wallet_coord is not False:
         sys.stdout.write("\nFound login button.")
+        sys.stdout.flush()
         click_btn(connect_wallet_coord)
         time.sleep(3)
 
     metamask_select_coord = get_coord(metamask_select_img, threshold_metamask_select)
     if metamask_select_coord is not False:
         sys.stdout.write("\nFound metamask button.")
+        sys.stdout.flush()
         click_btn(metamask_select_coord)
         time.sleep(5)
     
@@ -98,11 +100,13 @@ def login():
     metamask_unlock_coord = get_coord(metamask_unlock_img, threshold_unlock_img)
     if metamask_unlock_coord is not False:
         sys.stdout.write("\nFound unlock button. Delaying in case of bad bsc connection.")
+        sys.stdout.flush()
         time.sleep(5)
         click_btn(metamask_unlock_coord)
         time.sleep(5)
     else:
         sys.stdout.write("\nDidn't found unlock button. Wallet probably already unlocked.")
+        sys.stdout.flush()
 
     time.sleep(3)
 
@@ -113,20 +117,24 @@ def login():
         time.sleep(15)
         if current_screen() == "main":
             sys.stdout.write("\nLogged in.")
+            sys.stdout.flush()
             return True
         else:
             time.sleep(10)
             login()
     else:
         sys.stdout.write("\nLogin failed. Trying again.")
+        sys.stdout.flush()
         login_attempts += 1
         if (login_attempts > 3):
             sys.stdout.write("\n>3 login attemps. Retrying.")
+            sys.stdout.flush()
             pyautogui.hotkey('ctrl', 'f5')
             login_attempts = 0
             cancel_button_coord = get_coord(metamask_cancel_button, threshold_unlock_img)
             if cancel_button_coord is not False:
                 sys.stdout.write("\nMetamask is glitched. Cancelling and restarting")
+                sys.stdout.flush()
                 click_btn(cancel_button_coord)
             time.sleep(8)
         login()
@@ -156,6 +164,7 @@ def current_screen():
 def heroes_work():
     screen = current_screen()
     sys.stdout.write("\nSending heroes to work!")
+    sys.stdout.flush()
     if screen == "thunt":
         click_btn(get_coord(back_button_img, threshold_back))
         time.sleep(2)
@@ -182,6 +191,7 @@ def heroes_work():
 
             if error_coord is not False:
                 sys.stdout.write("\nError detected. Trying to resolve.")
+                sys.stdout.flush()
                 handle_error(refresh=False)
             
             work_button_list = get_coord(work_rest, threshold_work)
@@ -189,6 +199,7 @@ def heroes_work():
         
         click_btn(get_coord(character_close_button, threshold_back))
         sys.stdout.write("\nFinished putting to work.")
+        sys.stdout.flush()
     
 def refresh_heroes():
     if current_screen() == "thunt":
@@ -226,6 +237,7 @@ def main():
         error_coord = get_coord(error_img, threshold_error)
         if error_coord is not False:
             sys.stdout.write("\nError detected. Trying to resolve.")
+            sys.stdout.flush()
             handle_error(refresh=True)
 
 
@@ -244,16 +256,19 @@ def main():
             newmap_coord = get_coord(new_map, threshold_connect_wallet)
             if newmap_coord is not False:
                 sys.stdout.write("\nNew map!")
+                sys.stdout.flush()
                 click_btn(newmap_coord)
                 last["new_map"] = now
         
         now = time.time()
         if now - last["refresh_heroes"] > hero_refresh_interval * 60:
             sys.stdout.write("\nRefreshing heroes.")
+            sys.stdout.flush()
             refresh_heroes()
             last["refresh_heroes"] = now
             time.sleep(3)
 
+        sys.stdout.flush()
         time.sleep(general_check_time)
 
 
