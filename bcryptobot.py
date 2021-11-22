@@ -162,8 +162,6 @@ def heroes_work():
             time.sleep(5)
             screen = current_screen()
     if screen == "character":
-        sys.stdout.write("\nCharacter screen!")
-
         width, height = pyautogui.size()
         pyautogui.moveTo(width/2, height/2)
         pyautogui.scroll(-100)
@@ -189,7 +187,6 @@ def main():
 
     while True:
         screen = current_screen()
-        sys.stdout.write("\nCurrent screen:" + screen)
         ## Check for login screen
         if screen == "login":
             login()
@@ -200,8 +197,6 @@ def main():
         if error_coord is not False:
             sys.stdout.write("\nError detected. Trying to resolve.")
             handle_error()
-        else:
-            sys.stdout.write("\nNo error detected. Continuing")
 
 
         now = time.time()
