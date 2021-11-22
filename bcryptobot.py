@@ -39,6 +39,8 @@ hero_icon = cv2.imread('imgs/hero_icon.png')
 character_indicator = cv2.imread('imgs/character_indicator.png')
 character_close_button = cv2.imread('imgs/character_close_button.png')
 work_rest = cv2.imread('imgs/work_rest.png')
+new_map = cv2.imread('imgs/new_map.png')
+
 
 def printScreen():
     with mss.mss() as sct:
@@ -213,7 +215,11 @@ def main():
         if screen == "main":
             click_btn(get_coord(treasure_hunt_img, threshold_tresure))
             
-            
+        if screen == "thunt":
+            newmap_coord = get_coord(new_map, threshold_connect_wallet)
+            if newmap_coord is not False:
+                click_btn(newmap_coord)
+
         time.sleep(60)
 
 
