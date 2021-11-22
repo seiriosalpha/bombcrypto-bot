@@ -5,7 +5,7 @@ import numpy as np
 import mss
 import time
 
-## TODO: newmap detection, server overload detection
+## TODO: server overload detection, newmap log, refresh heroes
 
 threshold_connect_wallet = 0.6
 threshold_metamask_select = 0.6
@@ -80,25 +80,25 @@ def login():
 
     connect_wallet_coord = get_coord(connect_wallet_img, threshold_connect_wallet)
     if connect_wallet_coord is not False:
-        print("Found login button.")
+        sys.stdout.write("\nFound login button.")
         click_btn(connect_wallet_coord)
         time.sleep(3)
 
     metamask_select_coord = get_coord(metamask_select_img, threshold_metamask_select)
     if metamask_select_coord is not False:
-        print("Found metamask button.")
+        sys.stdout.write("\nFound metamask button.")
         click_btn(metamask_select_coord)
         time.sleep(5)
     
 
     metamask_unlock_coord = get_coord(metamask_unlock_img, threshold_unlock_img)
     if metamask_unlock_coord is not False:
-        print("Found unlock button. Delaying in case of bad bsc connection.")
+        sys.stdout.write("\nFound unlock button. Delaying in case of bad bsc connection.")
         time.sleep(5)
         click_btn(metamask_unlock_coord)
         time.sleep(5)
     else:
-        print("Didn't found unlock button. Wallet probably already unlocked.")
+        sys.stdout.write("\nDidn't found unlock button. Wallet probably already unlocked.")
 
     time.sleep(3)
 
@@ -108,21 +108,21 @@ def login():
         login_attempts = 0
         time.sleep(15)
         if current_screen() == "main":
-            print("Logged in.")
+            sys.stdout.write("\nLogged in.")
             return True
         else:
             time.sleep(10)
             login()
     else:
-        print("Login failed. Trying again.")
+        sys.stdout.write("\nLogin failed. Trying again.")
         login_attempts += 1
         if (login_attempts > 3):
-            print(">3 login attemps. Retrying.")
+            sys.stdout.write("\n>3 login attemps. Retrying.")
             pyautogui.hotkey('ctrl', 'f5')
             login_attempts = 0
             cancel_button_coord = get_coord(metamask_cancel_button, threshold_unlock_img)
             if cancel_button_coord is not False:
-                print("Metamask is glitched. Cancelling and restarting")
+                sys.stdout.write("\nMetamask is glitched. Cancelling and restarting")
                 click_btn(cancel_button_coord)
             time.sleep(8)
         login()
@@ -150,7 +150,7 @@ def current_screen():
 
 def heroes_work():
     screen = current_screen()
-    print("Sending heroes to work!")
+    sys.stdout.write("\nSending heroes to work!")
     if screen == "thunt":
         click_btn(get_coord(back_button_img, threshold_back))
         time.sleep(2)
@@ -162,7 +162,7 @@ def heroes_work():
             time.sleep(5)
             screen = current_screen()
     if screen == "character":
-        print("Character screen!")
+        sys.stdout.write("\nCharacter screen!")
 
         width, height = pyautogui.size()
         pyautogui.moveTo(width/2, height/2)
@@ -177,7 +177,7 @@ def heroes_work():
             work_button_list = get_coord(work_rest, threshold_work)
             time.sleep(4)
         click_btn(get_coord(character_close_button, threshold_back))
-        print("Finished putting to work.")
+        sys.stdout.write("\nFinished putting to work.")
     
 
 def main():
@@ -189,7 +189,7 @@ def main():
 
     while True:
         screen = current_screen()
-        print("Current screen:" + screen)
+        sys.stdout.write("\nCurrent screen:" + screen)
         ## Check for login screen
         if screen == "login":
             login()
@@ -198,10 +198,10 @@ def main():
         ## Check for error button.
         error_coord = get_coord(error_img, threshold_error)
         if error_coord is not False:
-            print("Error detected. Trying to resolve.")
+            sys.stdout.write("\nError detected. Trying to resolve.")
             handle_error()
         else:
-            print("No error detected. Continuing")
+            sys.stdout.write("\nNo error detected. Continuing")
 
 
         now = time.time()
