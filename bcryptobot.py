@@ -142,7 +142,11 @@ def login():
 def handle_error(refresh):
     error_coord = get_coord(error_img, threshold_error)
     if error_coord is not False:
-        sys.stdout.write("\nError detected. Trying to resolve.")
+        t = time.localtime()
+        current_time = time.strftime("%H:%M:%S", t)
+
+        sys.stdout.write("\nError detected. Trying to resolve. ")
+        sys.stdout.write(current_time)
         sys.stdout.flush()
     else:
         return False
@@ -179,7 +183,12 @@ def current_screen():
 
 def heroes_work():
     screen = current_screen()
-    sys.stdout.write("\nSending heroes to work!")
+
+    t = time.localtime()
+    current_time = time.strftime("%H:%M:%S", t)
+
+    sys.stdout.write("\nSending heroes to work! ")
+    sys.stdout.write(current_time)
     sys.stdout.flush()
     if screen == "thunt":
         click_btn(get_coord(back_button_img, threshold_back))
@@ -213,6 +222,12 @@ def heroes_work():
         sys.stdout.flush()
     
 def refresh_heroes():
+    t = time.localtime()
+    current_time = time.strftime("%H:%M:%S", t)
+
+    sys.stdout.write("\nRefreshing heroes. ")
+    sys.stdout.write(current_time)
+    sys.stdout.flush()
     if current_screen() == "thunt":
         back_coord = get_coord(back_button_img, threshold_back)
         if back_coord is not False:
@@ -251,7 +266,7 @@ def main():
         now = time.time()
         if now - last["heroes_work"] > hero_work_interval * 60: ## Check to see if heroes have been sent to work in the last n minutes
             heroes_work()
-            last["heroes_work"] = now ## Update latest time
+            last["heroes_work"] = now ## Update latest time            
             time.sleep(3)
         
         screen = current_screen()
@@ -269,8 +284,6 @@ def main():
         
         now = time.time()
         if now - last["refresh_heroes"] > hero_refresh_interval * 60:
-            sys.stdout.write("\nRefreshing heroes.")
-            sys.stdout.flush()
             refresh_heroes()
             last["refresh_heroes"] = now
             time.sleep(3)
