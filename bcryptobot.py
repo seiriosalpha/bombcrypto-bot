@@ -140,12 +140,28 @@ def login():
         login()
 
 def handle_error(refresh):
-    click_btn(get_coord(error_ok_img, threshold_connect_wallet)) 
+    error_coord = get_coord(error_img, threshold_error)
+    if error_coord is not False:
+        sys.stdout.write("\nError detected. Trying to resolve.")
+        sys.stdout.flush()
+    else:
+        return False
+
+    error_ok_coord = get_coord(error_ok_img, threshold_connect_wallet)
+    if error_ok_coord is not False:
+        click_btn(error_ok_coord)
+        time.sleep(8)
+
+    
+    x_button_coord = get_coord(character_close_button, threshold_back)
+    if x_button_coord is not False:
+        click_btn(x_button_coord)
+        time.sleep(5)
+
     if refresh:
         pyautogui.hotkey('ctrl', 'f5')
-    time.sleep(8)
-    login()
-
+        time.sleep(10)
+        login()
 
 
 def current_screen():
@@ -185,14 +201,9 @@ def heroes_work():
             x,y,w,h = work_button_list[-1]
             pyautogui.moveTo(x-10+w/2,y+h/2,1)
             pyautogui.click()
-            ## Check overload
-            time.sleep(2)
-            error_coord = get_coord(error_img, threshold_error)
+            time.sleep(3)
 
-            if error_coord is not False:
-                sys.stdout.write("\nError detected. Trying to resolve.")
-                sys.stdout.flush()
-                handle_error(refresh=False)
+            handle_error(refresh=False)
             
             work_button_list = get_coord(work_rest, threshold_work)
             time.sleep(4)
@@ -234,11 +245,7 @@ def main():
             time.sleep(5)
         
         ## Check for error button.
-        error_coord = get_coord(error_img, threshold_error)
-        if error_coord is not False:
-            sys.stdout.write("\nError detected. Trying to resolve.")
-            sys.stdout.flush()
-            handle_error(refresh=True)
+        handle_error(refresh=True)
 
 
         now = time.time()
