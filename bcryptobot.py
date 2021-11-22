@@ -15,7 +15,7 @@ threshold_error = 0.5
 threshold_back = 0.7
 threshold_hero_icon = 0.3
 threshold_work = 0.7
-threshold_tresure = 0.4
+threshold_treasure = 0.4
 
 hero_work_interval = 30
 
@@ -208,7 +208,7 @@ def main():
         screen = current_screen()
 
         if screen == "main":
-            click_btn(get_coord(treasure_hunt_img, threshold_tresure))
+            click_btn(get_coord(treasure_hunt_img, threshold_treasure))
             
         if screen == "thunt":
             newmap_coord = get_coord(new_map, threshold_connect_wallet)
