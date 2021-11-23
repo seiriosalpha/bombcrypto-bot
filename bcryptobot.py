@@ -320,7 +320,8 @@ def main():
             refresh_heroes()
             last["refresh_heroes"] = now
             time.sleep(3)
-
+        
+        check_for_logout()
         sys.stdout.flush()
         time.sleep(general_check_time)
 
