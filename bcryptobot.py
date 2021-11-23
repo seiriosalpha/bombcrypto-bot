@@ -181,7 +181,7 @@ def current_screen():
         return "unknown"
     
 
-def heroes_work():
+def heroes_work(): ## if didnt load try again
     screen = current_screen()
 
     t = time.localtime()
@@ -198,7 +198,7 @@ def heroes_work():
         hero_icon_coord = get_coord(hero_icon, threshold_hero_icon)
         if hero_icon_coord is not False:
             click_btn(hero_icon_coord)
-            time.sleep(5)
+            time.sleep(10)
             screen = current_screen()
     if screen == "character":
         width, height = pyautogui.size()
