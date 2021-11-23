@@ -19,7 +19,7 @@ threshold_work = 0.7
 threshold_treasure = 0.4
 
 general_check_time = 60
-hero_work_interval = 30
+hero_work_interval = 20
 hero_refresh_interval = 5
 
 hero_sent_count = 0
@@ -267,9 +267,13 @@ def check_for_logout():
     if connect_wallet_coord and metamask_select_coord and sign_button_coord is False:
         return False
     else:
+        t = time.localtime()
+        current_time = time.strftime("%H:%M:%S", t)
+
         sys.stdout.write("\nLogout detected. Login in. ")
         sys.stdout.write(current_time)
         sys.stdout.flush()
+        
         pyautogui.hotkey('ctrl', 'f5')
         time.sleep(15)
         login()
