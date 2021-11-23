@@ -118,7 +118,8 @@ def login():
         else:
             time.sleep(10)
             login()
-    else:
+    time.sleep(10)       
+    if current_screen() != "main":
         sys.stdout.write("\nLogin failed. Trying again.")
         sys.stdout.flush()
         login_attempts += 1
