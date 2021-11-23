@@ -209,7 +209,7 @@ def heroes_work(): ## if didnt load try again
             pyautogui.click()
             hero_sent_count += 1
             sys.stdout.write("\nHeroes sent to work: ")
-            sys.stdout.write(hero_sent_count)
+            sys.stdout.write(str(hero_sent_count))
             sys.stdout.flush()
             time.sleep(3)
 
