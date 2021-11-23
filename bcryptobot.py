@@ -135,7 +135,7 @@ def login():
             time.sleep(8)
         login()
 
-def handle_error(refresh):
+def handle_error():
     error_coord = get_coord(error_img, threshold_error)
     if error_coord is not False:
         t = time.localtime()
@@ -150,7 +150,9 @@ def handle_error(refresh):
     error_ok_coord = get_coord(error_ok_img, threshold_connect_wallet)
     if error_ok_coord is not False:
         click_btn(error_ok_coord)
-        time.sleep(8)
+        pyautogui.hotkey('ctrl', 'f5')
+        time.sleep(15)
+        login()
 
     
     x_button_coord = get_coord(character_close_button, threshold_back)
@@ -158,10 +160,6 @@ def handle_error(refresh):
         click_btn(x_button_coord)
         time.sleep(5)
 
-    if refresh:
-        pyautogui.hotkey('ctrl', 'f5')
-        time.sleep(10)
-        login()
 
 
 def current_screen():
