@@ -225,8 +225,7 @@ def heroes_work(): ## if didnt load try again
             sys.stdout.write("\nFinished putting to work.")
             sys.stdout.flush()
             return True
-        else:
-            heroes_work()
+
     else:
         if not check_for_logout():
             time.sleep(10)
