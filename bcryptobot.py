@@ -227,6 +227,8 @@ def heroes_work(): ## if didnt load try again
             sys.stdout.flush()
             return True
         else:
+            heroes_work()
+
 
     
 def refresh_heroes():
