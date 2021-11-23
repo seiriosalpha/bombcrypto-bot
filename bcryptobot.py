@@ -232,7 +232,7 @@ def refresh_heroes():
         back_coord = get_coord(back_button_img, threshold_back)
         if back_coord is not False:
             click_btn(back_coord)
-            time.sleep(2)
+            time.sleep(5)
         else:
             time.sleep(5)
             refresh_heroes
