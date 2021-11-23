@@ -6,7 +6,7 @@ import mss
 import time
 import sys
 
-## TODO: cleanup, transfer button checking from functions to click_btn
+## TODO: cleanup, transfer button checking from functions to click_btn, add get_to_place function
 
 threshold_connect_wallet = 0.6
 threshold_metamask_select = 0.6
@@ -186,9 +186,11 @@ def heroes_work(): ## if didnt load try again
     sys.stdout.write(current_time)
     sys.stdout.flush()
     if screen == "thunt":
-        click_btn(get_coord(back_button_img, threshold_back))
-        time.sleep(6)
-        screen = current_screen()
+        back_coord = get_coord(back_button_img, threshold_back)
+        if back_coord is not False:
+            click_btn(back_coord)
+            time.sleep(6)
+            screen = current_screen()
     if screen == "main":
         hero_icon_coord = get_coord(hero_icon, threshold_hero_icon)
         if hero_icon_coord is not False:
@@ -216,9 +218,16 @@ def heroes_work(): ## if didnt load try again
             work_button_list = get_coord(work_rest, threshold_work)
             time.sleep(4)
         
-        click_btn(get_coord(character_close_button, threshold_back))
-        sys.stdout.write("\nFinished putting to work.")
-        sys.stdout.flush()
+        time.sleep(5)
+
+        character_close_coord = get_coord(character_close_button, threshold_back)
+        if character_close_coord is not False:
+            click_btn(character_close_coord)
+            sys.stdout.write("\nFinished putting to work.")
+            sys.stdout.flush()
+            return True
+        else:
+
     
 def refresh_heroes():
     t = time.localtime()
@@ -271,7 +280,9 @@ def main():
         screen = current_screen()
 
         if screen == "main":
-            click_btn(get_coord(treasure_hunt_img, threshold_treasure))
+            treasure_coords = get_coord(treasure_hunt_img, threshold_treasure)
+            if treasure_coords is not False:
+                click_btn(treasure_coords)
             
         if screen == "thunt":
             newmap_coord = get_coord(new_map, threshold_connect_wallet)
