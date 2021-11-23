@@ -22,8 +22,7 @@ general_check_time = 60
 hero_work_interval = 30
 hero_refresh_interval = 5
 
-
-
+hero_sent_count = 0
 login_attempts = 0
 pyautogui.FAILSAFE = False
 
@@ -179,6 +178,7 @@ def current_screen():
     
 
 def heroes_work(): ## if didnt load try again
+    global hero_sent_count
     screen = current_screen()
 
     t = time.localtime()
@@ -207,6 +207,10 @@ def heroes_work(): ## if didnt load try again
             x,y,w,h = work_button_list[-1]
             pyautogui.moveTo(x-10+w/2,y+h/2,1)
             pyautogui.click()
+            hero_sent_count += 1
+            sys.stdout.write("\nHeroes sent to work: ")
+            sys.stdout.write(hero_sent_count)
+            sys.stdout.flush()
             time.sleep(3)
 
             handle_error(refresh=False)
