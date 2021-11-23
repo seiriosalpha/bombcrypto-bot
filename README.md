@@ -5,7 +5,12 @@
 - Faster.
 - All heroes are sent to work regardless of their stamina.
 
-# I will not provide support on Windows.
+# I will not provide support for Windows-only bugs.
+## Notes:
+- Tested on firefox but should also work on chrome. Most other browsers are unsupported.
+- Default zoom on browser required (100%). Won't work if you zoom in/out.
+- Still in very early versions, still a lot of work to be done.
+
 # Install on archlinux
 ```
 sudo pacman -Syu python-pip tk
