@@ -104,9 +104,6 @@ def login():
         time.sleep(5)
         click_btn(metamask_unlock_coord)
         time.sleep(5)
-    else:
-        sys.stdout.write("\nDidn't found unlock button. Wallet probably already unlocked.")
-        sys.stdout.flush()
 
     time.sleep(3)
 
@@ -114,7 +111,7 @@ def login():
     if sign_button_coord is not False:  
         click_btn(sign_button_coord)
         login_attempts = 0
-        time.sleep(15)
+        time.sleep(30)
         if current_screen() == "main":
             sys.stdout.write("\nLogged in.")
             sys.stdout.flush()
