@@ -99,9 +99,9 @@ def login():
 
     metamask_unlock_coord = get_coord(metamask_unlock_img, threshold_unlock_img)
     if metamask_unlock_coord is not False:
-        sys.stdout.write("\nFound unlock button. Delaying in case of bad bsc connection.")
+        sys.stdout.write("\nFound unlock button. Waiting 30 seconds for password")
         sys.stdout.flush()
-        time.sleep(5)
+        time.sleep(30)
         click_btn(metamask_unlock_coord)
         time.sleep(5)
 
