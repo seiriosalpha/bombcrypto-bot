@@ -165,7 +165,7 @@ def handle_error():
 def current_screen():
     if get_coord(back_button_img, threshold_back) is not False:
         return "thunt"
-    elif get_coord(treasure_hunt_img, threshold_connect_wallet) is not False:
+    elif get_coord(treasure_hunt_img, threshold_error) is not False:
         return "main"
     elif get_coord(connect_wallet_img, threshold_connect_wallet) is not False:
         return "login"
