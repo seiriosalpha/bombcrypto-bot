@@ -291,7 +291,7 @@ def main():
     last = {
     "heroes_work" : 0,
     "new_map" : 0,
-    "drefresh_heroes" : 0
+    "refresh_heroes" : 0
     "refresh_page": 0
     }
 
