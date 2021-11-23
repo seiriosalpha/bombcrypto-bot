@@ -6,7 +6,7 @@ import mss
 import time
 import sys
 
-## TODO: cleanup, transfer button checking from functions to click_btn, add get_to_place function, add refresh page every x minutes
+## TODO: cleanup, transfer button checking from functions to click_btn, add get_to_place function, add refresh page every x minutes, better login error process
 
 threshold_connect_wallet = 0.6
 threshold_metamask_select = 0.6
@@ -291,8 +291,8 @@ def main():
     last = {
     "heroes_work" : 0,
     "new_map" : 0,
-    "refresh_heroes" : 0
-    "refresh_page": 0
+    "refresh_heroes" : 0,
+    "refresh_page" : 0
     }
 
     while True:
