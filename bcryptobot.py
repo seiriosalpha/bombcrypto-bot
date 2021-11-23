@@ -6,7 +6,7 @@ import mss
 import time
 import sys
 
-## TODO: cleanup, transfer button checking from functions to click_btn, add get_to_place function
+## TODO: cleanup, transfer button checking from functions to click_btn, add get_to_place function, add refresh page every x minutes
 
 threshold_connect_wallet = 0.6
 threshold_metamask_select = 0.6
@@ -21,6 +21,7 @@ threshold_treasure = 0.4
 general_check_time = 60
 hero_work_interval = 20
 hero_refresh_interval = 5
+refresh_every_mins = 120
 
 hero_sent_count = 0
 login_attempts = 0
@@ -135,6 +136,7 @@ def login():
                 click_btn(cancel_button_coord)
             time.sleep(8)
         login()
+    handle_error()
 
 def handle_error():
     error_coord = get_coord(error_img, threshold_error)
@@ -289,7 +291,8 @@ def main():
     last = {
     "heroes_work" : 0,
     "new_map" : 0,
-    "refresh_heroes" : 0
+    "drefresh_heroes" : 0
+    "refresh_page": 0
     }
 
     while True:
