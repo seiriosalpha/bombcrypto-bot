@@ -260,23 +260,27 @@ def refresh_heroes():
 
 
 def check_for_logout():
-    connect_wallet_coord = get_coord(connect_wallet_img, threshold_connect_wallet)
-    metamask_select_coord = get_coord(metamask_select_img, threshold_metamask_select)
-    sign_button_coord = get_coord(metamask_sign_img, threshold_sign_img)
+    screen = current_screen()
+    if screen == "unknown":
+        connect_wallet_coord = get_coord(connect_wallet_img, threshold_connect_wallet)
+        metamask_select_coord = get_coord(metamask_select_img, threshold_metamask_select)
+        sign_button_coord = get_coord(metamask_sign_img, threshold_sign_img)
 
-    if connect_wallet_coord and metamask_select_coord and sign_button_coord is False:
-        return False
+        if connect_wallet_coord and metamask_select_coord and sign_button_coord is False:
+            return False
+        else:
+            t = time.localtime()
+            current_time = time.strftime("%H:%M:%S", t)
+
+            sys.stdout.write("\nLogout detected. Login in. ")
+            sys.stdout.write(current_time)
+            sys.stdout.flush()
+            
+            pyautogui.hotkey('ctrl', 'f5')
+            time.sleep(15)
+            login()
     else:
-        t = time.localtime()
-        current_time = time.strftime("%H:%M:%S", t)
-
-        sys.stdout.write("\nLogout detected. Login in. ")
-        sys.stdout.write(current_time)
-        sys.stdout.flush()
-        
-        pyautogui.hotkey('ctrl', 'f5')
-        time.sleep(15)
-        login()
+        return False
 
 
 
