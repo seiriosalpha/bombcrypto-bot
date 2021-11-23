@@ -228,6 +228,9 @@ def heroes_work(): ## if didnt load try again
             return True
         else:
             heroes_work()
+    else:
+        login()
+
 
 
     
