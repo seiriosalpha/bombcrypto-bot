@@ -213,7 +213,7 @@ def heroes_work(): ## if didnt load try again
             sys.stdout.flush()
             time.sleep(3)
 
-            handle_error(refresh=False)
+            handle_error()
             
             work_button_list = get_coord(work_rest, threshold_work)
             time.sleep(4)
@@ -270,7 +270,7 @@ def main():
             time.sleep(5)
         
         ## Check for error button.
-        handle_error(refresh=True)
+        handle_error()
 
 
         now = time.time()
