@@ -20,7 +20,7 @@ threshold_treasure = 0.4
 
 general_check_time = 60
 hero_work_interval = 30
-hero_refresh_interval = 20
+hero_refresh_interval = 5
 
 
 
