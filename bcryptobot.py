@@ -6,7 +6,7 @@ import mss
 import time
 import sys
 
-## TODO: cleanup, transfer button checking from functions to click_btn, add get_to_place function, add refresh page every x minutes, better login error process
+## TODO: cleanup, transfer button checking from functions to click_btn, add get_to_place function, add refresh page every x minutes, better login error process, only
 
 threshold_connect_wallet = 0.6
 threshold_metamask_select = 0.6
@@ -112,15 +112,11 @@ def login():
         click_btn(sign_button_coord)
         login_attempts = 0
         time.sleep(30)
-        if current_screen() == "main":
-            sys.stdout.write("\nLogged in.")
-            sys.stdout.flush()
-            return True
-        else:
-            time.sleep(10)
-            login()
-    time.sleep(10)       
-    if current_screen() != "main":
+    if current_screen() == "main":
+        sys.stdout.write("\nLogged in.")
+        sys.stdout.flush()
+        return True
+    else:
         sys.stdout.write("\nLogin failed. Trying again.")
         sys.stdout.flush()
         login_attempts += 1
@@ -232,7 +228,10 @@ def heroes_work(): ## if didnt load try again
         else:
             heroes_work()
     else:
-        check_for_logout()
+        if not check_for_logout():
+            time.sleep(10)
+            heroes_work() 
+        
 
 
 
