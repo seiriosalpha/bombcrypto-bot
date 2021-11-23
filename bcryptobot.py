@@ -192,7 +192,7 @@ def heroes_work():
     sys.stdout.flush()
     if screen == "thunt":
         click_btn(get_coord(back_button_img, threshold_back))
-        time.sleep(2)
+        time.sleep(6)
         screen = current_screen()
     if screen == "main":
         hero_icon_coord = get_coord(hero_icon, threshold_hero_icon)
