@@ -230,7 +230,7 @@ def heroes_work(): ## if didnt load try again
         else:
             heroes_work()
     else:
-        login()
+        check_for_logout()
 
 
 
