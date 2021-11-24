@@ -6,7 +6,7 @@ import mss
 import time
 import sys
 
-## TODO: cleanup, transfer button checking from functions to click_btn, add get_to_place function, add refresh page every x minutes, better login error process, only
+## TODO: cleanup, add get_to_place function, add refresh page every x minutes, better login error process
 
 threshold_connect_wallet = 0.6
 threshold_metamask_select = 0.6
@@ -52,7 +52,6 @@ def printScreen():
         sct_img = np.array(sct.grab(sct.monitors[0]))
         return sct_img[:,:,:3]
 
-
 def get_coord(target, threshold):
     img = printScreen()
     result = cv2.matchTemplate(img,target,cv2.TM_CCOEFF_NORMED)
@@ -73,27 +72,32 @@ def get_coord(target, threshold):
     else:
         return False
 
-def click_btn(coordinates):
-    x,y,w,h = coordinates[0]
-    pyautogui.moveTo(x+w/2,y+h/2,1)
-    pyautogui.click()
-
+def click_btn(coordinates, insist="no"):
+    click_tries = 0
+    while click_tries < 3:
+        if coordinates is not False:
+            x,y,w,h = coordinates[0]
+            pyautogui.moveTo(x+w/2,y+h/2,1)
+            pyautogui.click()
+            click_tries = 0
+            return True
+        elif insist == "yes":
+            click_tries += 1
+            time.sleep(5)
+        else:
+            return False
 
 def login():
     global login_attempts
 
-    connect_wallet_coord = get_coord(connect_wallet_img, threshold_connect_wallet)
-    if connect_wallet_coord is not False:
+    if click_btn(get_coord(connect_wallet_img, threshold_connect_wallet)):
         sys.stdout.write("\nFound login button.")
         sys.stdout.flush()
-        click_btn(connect_wallet_coord)
         time.sleep(3)
 
-    metamask_select_coord = get_coord(metamask_select_img, threshold_metamask_select)
-    if metamask_select_coord is not False:
+    if click_btn(get_coord(metamask_select_img, threshold_metamask_select)):
         sys.stdout.write("\nFound metamask button.")
         sys.stdout.flush()
-        click_btn(metamask_select_coord)
         time.sleep(5)
     
 
@@ -107,11 +111,11 @@ def login():
 
     time.sleep(3)
 
-    sign_button_coord = get_coord(metamask_sign_img, threshold_sign_img)
-    if sign_button_coord is not False:  
-        click_btn(sign_button_coord)
-        login_attempts = 0
+    if click_btn(get_coord(metamask_sign_img, threshold_sign_img)):
+        sys.stdout.write("\nFound sign button. Waiting 30s to check if logged in.")
+        sys.stdout.flush()
         time.sleep(30)
+
     if current_screen() == "main":
         sys.stdout.write("\nLogged in.")
         sys.stdout.flush()
@@ -120,23 +124,25 @@ def login():
         sys.stdout.write("\nLogin failed. Trying again.")
         sys.stdout.flush()
         login_attempts += 1
+
         if (login_attempts > 3):
             sys.stdout.write("\n>3 login attemps. Retrying.")
             sys.stdout.flush()
             pyautogui.hotkey('ctrl', 'f5')
             login_attempts = 0
-            cancel_button_coord = get_coord(metamask_cancel_button, threshold_unlock_img)
-            if cancel_button_coord is not False:
-                sys.stdout.write("\nMetamask is glitched. Cancelling and restarting")
+
+            if click_btn(get_coord(metamask_cancel_button, threshold_unlock_img)):
+                sys.stdout.write("\nMetamask is glitched. Fixing.")
                 sys.stdout.flush()
-                click_btn(cancel_button_coord)
+            
             time.sleep(8)
+
         login()
+
     handle_error()
 
 def handle_error():
-    error_coord = get_coord(error_img, threshold_error)
-    if error_coord is not False:
+    if get_coord(error_img, threshold_error) is not False:
         t = time.localtime()
         current_time = time.strftime("%H:%M:%S", t)
 
@@ -146,20 +152,13 @@ def handle_error():
     else:
         return False
 
-    error_ok_coord = get_coord(error_ok_img, threshold_connect_wallet)
-    if error_ok_coord is not False:
-        click_btn(error_ok_coord)
+    if click_btn(get_coord(error_ok_img, threshold_connect_wallet)):
+        sys.stdout.write("\nRefreshing page. ")
+        sys.stdout.write(current_time)
+        sys.stdout.flush()
         pyautogui.hotkey('ctrl', 'f5')
         time.sleep(15)
         login()
-
-    
-    x_button_coord = get_coord(character_close_button, threshold_back)
-    if x_button_coord is not False:
-        click_btn(x_button_coord)
-        time.sleep(5)
-
-
 
 def current_screen():
     if get_coord(back_button_img, threshold_back) is not False:
@@ -173,10 +172,8 @@ def current_screen():
     else:
         return "unknown"
     
-
-def heroes_work(): ## if didnt load try again
+def heroes_work(): 
     global hero_sent_count
-    screen = current_screen()
 
     t = time.localtime()
     current_time = time.strftime("%H:%M:%S", t)
@@ -184,19 +181,16 @@ def heroes_work(): ## if didnt load try again
     sys.stdout.write("\nSending heroes to work! ")
     sys.stdout.write(current_time)
     sys.stdout.flush()
-    if screen == "thunt":
-        back_coord = get_coord(back_button_img, threshold_back)
-        if back_coord is not False:
-            click_btn(back_coord)
+
+    if current_screen() == "thunt":
+        if click_btn(get_coord(back_button_img, threshold_back)):
             time.sleep(6)
-            screen = current_screen()
-    if screen == "main":
-        hero_icon_coord = get_coord(hero_icon, threshold_hero_icon)
-        if hero_icon_coord is not False:
-            click_btn(hero_icon_coord)
+
+    if current_screen() == "main":
+        if click_btn(get_coord(hero_icon, threshold_hero_icon)):
             time.sleep(10)
-            screen = current_screen()
-    if screen == "character":
+
+    if current_screen() == "character":
         width, height = pyautogui.size()
         pyautogui.moveTo(width/2, height/2)
         pyautogui.scroll(-100)
@@ -210,7 +204,7 @@ def heroes_work(): ## if didnt load try again
             sys.stdout.write("\nHeroes sent to work: ")
             sys.stdout.write(str(hero_sent_count))
             sys.stdout.flush()
-            time.sleep(3)
+            time.sleep(4)
 
             handle_error()
             
@@ -219,22 +213,20 @@ def heroes_work(): ## if didnt load try again
         
         time.sleep(5)
 
-        character_close_coord = get_coord(character_close_button, threshold_back)
-        if character_close_coord is not False:
-            click_btn(character_close_coord)
+        if click_btn(get_coord(character_close_button, threshold_back)):
             sys.stdout.write("\nFinished putting to work.")
             sys.stdout.flush()
             return True
-
-    else:
-        if not check_for_logout():
-            time.sleep(10)
-            heroes_work() 
+        else:
+            sys.stdout.write("\nCouldn't send characters to work, trying again later.")
+            sys.stdout.flush()
+            return False
         
+    time.sleep(5)
 
+    if current_screen() == "unknown":
+        check_for_logout()
 
-
-    
 def refresh_heroes():
     t = time.localtime()
     current_time = time.strftime("%H:%M:%S", t)
@@ -243,47 +235,34 @@ def refresh_heroes():
     sys.stdout.write(current_time)
     sys.stdout.flush()
     if current_screen() == "thunt":
-        back_coord = get_coord(back_button_img, threshold_back)
-        if back_coord is not False:
-            click_btn(back_coord)
+        if click_btn(get_coord(back_button_img, threshold_back)):
             time.sleep(5)
-        else:
-            time.sleep(5)
-            refresh_heroes
     if current_screen() == "main":
-        treasure_coords = get_coord(treasure_hunt_img, threshold_treasure)
-        if treasure_coords is not False:
-            click_btn(treasure_coords)
-            time.sleep(2)
+        if click_btn(get_coord(treasure_hunt_img, threshold_treasure)):
+            return True
         else:
-            time.sleep(5)
-            refresh_heroes
-
+            return False
+    else:
+        return False
 
 def check_for_logout():
-    screen = current_screen()
-    if screen == "unknown":
-        connect_wallet_coord = get_coord(connect_wallet_img, threshold_connect_wallet)
-        metamask_select_coord = get_coord(metamask_select_img, threshold_metamask_select)
-        sign_button_coord = get_coord(metamask_sign_img, threshold_sign_img)
-
-        if connect_wallet_coord and metamask_select_coord and sign_button_coord is False:
-            return False
-        else:
+    if current_screen() == "unknown":
+        if get_coord(connect_wallet_img, threshold_connect_wallet) or get_coord(metamask_select_img, threshold_metamask_select) or get_coord(metamask_sign_img, threshold_sign_img) is not False:
             t = time.localtime()
             current_time = time.strftime("%H:%M:%S", t)
 
             sys.stdout.write("\nLogout detected. Login in. ")
+            sys.stdout.write("\nRefreshing page. ")
             sys.stdout.write(current_time)
             sys.stdout.flush()
-            
             pyautogui.hotkey('ctrl', 'f5')
             time.sleep(15)
             login()
+        else:
+            return False
+            
     else:
         return False
-
-
 
 def main():
     last = {
@@ -294,46 +273,41 @@ def main():
     }
 
     while True:
-        screen = current_screen()
-        ## Check for login screen
-        if screen == "login":
+        if current_screen() == "login":
             login()
             time.sleep(5)
         
-        ## Check for error button.
         handle_error()
-
 
         now = time.time()
         if now - last["heroes_work"] > hero_work_interval * 60: ## Check to see if heroes have been sent to work in the last n minutes
-            heroes_work()
-            last["heroes_work"] = now ## Update latest time            
-            time.sleep(3)
+            if heroes_work():
+                last["heroes_work"] = now ## Update latest time            
+                time.sleep(3)
         
-        screen = current_screen()
-
-        if screen == "main":
-            treasure_coords = get_coord(treasure_hunt_img, threshold_treasure)
-            if treasure_coords is not False:
-                click_btn(treasure_coords)
+        if current_screen() == "main":
+            if click_btn(get_coord(treasure_hunt_img, threshold_treasure)):
+                sys.stdout.write("\nEntering treasure hunt")
+                sys.stdout.flush()
             
-        if screen == "thunt":
-            newmap_coord = get_coord(new_map, threshold_connect_wallet)
-            if newmap_coord is not False:
+        if current_screen() == "thunt":
+            if click_btn(get_coord(new_map, threshold_connect_wallet)):
                 sys.stdout.write("\nNew map!")
                 sys.stdout.flush()
-                click_btn(newmap_coord)
                 last["new_map"] = now
         
         now = time.time()
         if now - last["refresh_heroes"] > hero_refresh_interval * 60:
-            refresh_heroes()
-            last["refresh_heroes"] = now
-            time.sleep(3)
+            if refresh_heroes():
+                last["refresh_heroes"] = now
+                time.sleep(3)
         
+        if current_screen() == "character":
+            click_btn(get_coord(character_close_button, threshold_back))
+            time.sleep(3)
+
         check_for_logout()
         sys.stdout.flush()
         time.sleep(general_check_time)
-
 
 main()
