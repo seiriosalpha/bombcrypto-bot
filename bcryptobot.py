@@ -98,7 +98,7 @@ def login():
     if click_btn(get_coord(metamask_select_img, threshold_metamask_select)):
         sys.stdout.write("\nFound metamask button.")
         sys.stdout.flush()
-        time.sleep(5)
+        time.sleep(8)
     
 
     metamask_unlock_coord = get_coord(metamask_unlock_img, threshold_unlock_img)
@@ -193,11 +193,12 @@ def heroes_work():
     if current_screen() == "character":
         width, height = pyautogui.size()
         pyautogui.moveTo(width/2, height/2)
-        pyautogui.scroll(-100)
+        pyautogui.scroll(-150)
 
         work_button_list = get_coord(work_rest, threshold_work)
         while work_button_list is not False:
             x,y,w,h = work_button_list[-1]
+            
             pyautogui.moveTo(x-10+w/2,y+h/2,1)
             pyautogui.click()
             hero_sent_count += 1
