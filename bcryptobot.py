@@ -116,6 +116,11 @@ def login():
         sys.stdout.write("\nFound sign button. Waiting 30s to check if logged in.")
         sys.stdout.flush()
         time.sleep(30)
+    
+    if click_btn(get_coord(metamask_sign_img, threshold_sign_img)): ## twice because metamask glitch
+        sys.stdout.write("\nFound sign button. Waiting 30s to check if logged in.")
+        sys.stdout.flush()
+        time.sleep(30)
 
     if current_screen() == "main":
         sys.stdout.write("\nLogged in.")
@@ -161,6 +166,9 @@ def handle_error():
         time.sleep(15)
         login()
 
+    if click_btn(get_coord(character_close_button, threshold_back)):
+        time.sleep(3)
+        
 def current_screen():
     if get_coord(back_button_img, threshold_back) is not False:
         return "thunt"
