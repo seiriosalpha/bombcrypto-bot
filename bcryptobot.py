@@ -16,7 +16,7 @@ threshold_error = 0.5
 threshold_back = 0.7
 threshold_hero_icon = 0.3
 threshold_work = 0.7
-threshold_treasure = 0.4
+threshold_treasure = 0.5
 
 general_check_time = 60
 hero_work_interval = 20
