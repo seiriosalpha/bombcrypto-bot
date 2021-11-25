@@ -8,6 +8,7 @@ import sys
 
 ## TODO: cleanup, add get_to_place function, add refresh page every x minutes, better login error process
 
+## Higher = bot needs to have more confidence to click it
 threshold_connect_wallet = 0.6
 threshold_metamask_select = 0.6
 threshold_unlock_img = 0.8
