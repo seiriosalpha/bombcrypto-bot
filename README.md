@@ -10,7 +10,6 @@
 - Tested on firefox but should also work on chrome. Most other browsers are unsupported.
 - Default zoom on browser required (100%). Won't work if you zoom in/out.
 - Still in very early versions, still a lot of work to be done.
-- Contact me if you need support to send heroes to home.
 
 # Install on archlinux
 ```
