@@ -18,10 +18,10 @@ threshold_back = 0.7
 threshold_hero_icon = 0.3
 threshold_work = 0.4
 threshold_treasure = 0.5
-threshold_energy = 1
+threshold_energy = 0.6
 
 general_check_time = 60
-hero_work_interval = 20
+hero_work_interval = 30
 hero_refresh_interval = 5
 refresh_every_mins = 120
 
@@ -48,6 +48,8 @@ character_close_button = cv2.imread('imgs/character_close_button.png')
 work = cv2.imread('imgs/work.png')
 new_map = cv2.imread('imgs/new_map.png')
 high_energy = cv2.imread('imgs/high_energy.png')
+bar_end = cv2.imread('imgs/bar_end.png')
+
 
 
 
@@ -199,33 +201,14 @@ def heroes_work():
         width, height = pyautogui.size()
         pyautogui.moveTo(width/2-200, height/2)
         pyautogui.click()
-
-        while hero_sent_now < hero_total_count-6:
-            time.sleep(1)
-            he_coord = get_coord(high_energy, threshold_work)
-            if he_coord is not False:
-                x,y,w,h = he_coord[0]
-                pyautogui.moveTo(x+110+w/2,y+h/2,1)
-                pyautogui.click()
-                time.sleep(2)
-                handle_error()
-                hero_sent_now += 1
-                hero_sent_count +=1
-                sys.stdout.write("\nHeroes sent to work: ")
-                sys.stdout.write(str(hero_sent_count))
-                sys.stdout.flush()   
-                pyautogui.scroll(-4)
-            else:
-                pyautogui.scroll(-20)
-
         pyautogui.scroll(-150)
+        time.sleep(2)
+        work_coord = get_coord(bar_end, threshold_work)
+        x,y,w,h = work_coord[-1]
+        pyautogui.moveTo(x-10+w/2,y+h/2,1)
 
         while hero_sent_now < hero_total_count:
-            time.sleep(1)
-            he_coord = get_coord(high_energy, threshold_work)
-            if he_coord is not False:
-                x,y,w,h = he_coord[-1]
-                pyautogui.moveTo(x+110+w/2,y+h/2,1)
+            if get_coord(bar_end, threshold_work) is not False:
                 pyautogui.click()
                 time.sleep(2)
                 handle_error()
@@ -233,10 +216,9 @@ def heroes_work():
                 hero_sent_count +=1
                 sys.stdout.write("\nHeroes sent to work: ")
                 sys.stdout.write(str(hero_sent_count))
-                sys.stdout.flush()
+                sys.stdout.flush()  
             else:
-                hero_sent_now += 1
-                      
+                break
 
         time.sleep(5)
 
