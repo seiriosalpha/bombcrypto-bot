@@ -217,7 +217,9 @@ def heroes_work():
                 pyautogui.scroll(-4)
             else:
                 pyautogui.scroll(-20)
-        
+
+        pyautogui.scroll(-150)
+
         while hero_sent_now < hero_total_count:
             time.sleep(1)
             he_coord = get_coord(high_energy, threshold_work)
@@ -231,10 +233,9 @@ def heroes_work():
                 hero_sent_count +=1
                 sys.stdout.write("\nHeroes sent to work: ")
                 sys.stdout.write(str(hero_sent_count))
-                sys.stdout.flush()   
-                pyautogui.scroll(-4)
+                sys.stdout.flush()
             else:
-                pyautogui.scroll(-20)
+                hero_sent_now += 1
                       
 
         time.sleep(5)
