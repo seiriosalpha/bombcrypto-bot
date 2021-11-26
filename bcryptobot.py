@@ -315,6 +315,7 @@ def main():
         if current_screen() == "main":
             if click_btn(get_coord(treasure_hunt_img, threshold_treasure)):
                 sys.stdout.write("\nEntering treasure hunt")
+                last["refresh_heroes"] = now
                 sys.stdout.flush()
             
         if current_screen() == "thunt":
