@@ -16,14 +16,16 @@ threshold_sign_img = 0.8
 threshold_error = 0.5
 threshold_back = 0.7
 threshold_hero_icon = 0.3
-threshold_work = 0.5
+threshold_work = 0.4
 threshold_treasure = 0.5
+threshold_energy = 1
 
 general_check_time = 60
 hero_work_interval = 20
 hero_refresh_interval = 5
 refresh_every_mins = 120
 
+hero_total_count = 15
 hero_sent_count = 0
 login_attempts = 0
 pyautogui.FAILSAFE = False
@@ -43,8 +45,10 @@ back_button_img = cv2.imread('imgs/back_button.png')
 hero_icon = cv2.imread('imgs/hero_icon.png')
 character_indicator = cv2.imread('imgs/character_indicator.png')
 character_close_button = cv2.imread('imgs/character_close_button.png')
-work_rest = cv2.imread('imgs/work_rest.png')
+work = cv2.imread('imgs/work.png')
 new_map = cv2.imread('imgs/new_map.png')
+high_energy = cv2.imread('imgs/high_energy.png')
+
 
 
 def printScreen():
@@ -94,13 +98,7 @@ def login():
     if click_btn(get_coord(connect_wallet_img, threshold_connect_wallet)):
         sys.stdout.write("\nFound login button.")
         sys.stdout.flush()
-        time.sleep(3)
-
-    if click_btn(get_coord(metamask_select_img, threshold_metamask_select)):
-        sys.stdout.write("\nFound metamask button.")
-        sys.stdout.flush()
-        time.sleep(8)
-    
+        time.sleep(15)
 
     metamask_unlock_coord = get_coord(metamask_unlock_img, threshold_unlock_img)
     if metamask_unlock_coord is not False:
@@ -110,17 +108,14 @@ def login():
         click_btn(metamask_unlock_coord)
         time.sleep(5)
 
-    time.sleep(3)
-
     if click_btn(get_coord(metamask_sign_img, threshold_sign_img)):
-        sys.stdout.write("\nFound sign button. Waiting 30s to check if logged in.")
+        sys.stdout.write("\nFound sign button. Waiting 20s to check if logged in.")
         sys.stdout.flush()
-        time.sleep(30)
-    
-    if click_btn(get_coord(metamask_sign_img, threshold_sign_img)): ## twice because metamask glitch
-        sys.stdout.write("\nFound sign button. Waiting 30s to check if logged in.")
-        sys.stdout.flush()
-        time.sleep(30)
+        time.sleep(5)
+        if click_btn(get_coord(metamask_sign_img, threshold_sign_img)): ## twice because metamask glitch
+            sys.stdout.write("\nFound glitched sign button. Waiting 20s to check if logged in.")
+            sys.stdout.flush()
+        time.sleep(20)
 
     if current_screen() == "main":
         sys.stdout.write("\nLogged in.")
@@ -183,7 +178,8 @@ def current_screen():
     
 def heroes_work(): 
     global hero_sent_count
-
+    hero_sent_now = 0
+    tries = 0
     t = time.localtime()
     current_time = time.strftime("%H:%M:%S", t)
 
@@ -201,26 +197,46 @@ def heroes_work():
 
     if current_screen() == "character":
         width, height = pyautogui.size()
-        pyautogui.moveTo(width/2, height/2)
-        pyautogui.scroll(-150)
+        pyautogui.moveTo(width/2-200, height/2)
+        pyautogui.click()
 
-        work_button_list = get_coord(work_rest, threshold_work)
-        while work_button_list is not False:
-            x,y,w,h = work_button_list[-1]
-            
-            pyautogui.moveTo(x-10+w/2,y+h/2,1)
-            pyautogui.click()
-            hero_sent_count += 1
-            sys.stdout.write("\nHeroes sent to work: ")
-            sys.stdout.write(str(hero_sent_count))
-            sys.stdout.flush()
-            time.sleep(4)
-
-            handle_error()
-            
-            work_button_list = get_coord(work_rest, threshold_work)
-            time.sleep(4)
+        while hero_sent_now < hero_total_count-6:
+            time.sleep(1)
+            he_coord = get_coord(high_energy, threshold_work)
+            if he_coord is not False:
+                x,y,w,h = he_coord[0]
+                pyautogui.moveTo(x+110+w/2,y+h/2,1)
+                pyautogui.click()
+                time.sleep(2)
+                handle_error()
+                hero_sent_now += 1
+                hero_sent_count +=1
+                sys.stdout.write("\nHeroes sent to work: ")
+                sys.stdout.write(str(hero_sent_count))
+                sys.stdout.flush()   
+                pyautogui.scroll(-4)
+            else:
+                pyautogui.scroll(-20)
         
+        while hero_sent_now < hero_total_count:
+            time.sleep(1)
+            he_coord = get_coord(high_energy, threshold_work)
+            if he_coord is not False:
+                x,y,w,h = he_coord[-1]
+                pyautogui.moveTo(x+110+w/2,y+h/2,1)
+                pyautogui.click()
+                time.sleep(2)
+                handle_error()
+                hero_sent_now += 1
+                hero_sent_count +=1
+                sys.stdout.write("\nHeroes sent to work: ")
+                sys.stdout.write(str(hero_sent_count))
+                sys.stdout.flush()   
+                pyautogui.scroll(-4)
+            else:
+                pyautogui.scroll(-20)
+                      
+
         time.sleep(5)
 
         if click_btn(get_coord(character_close_button, threshold_back)):
